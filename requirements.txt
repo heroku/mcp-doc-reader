@@ -3,3 +3,7 @@ fastapi
 uvicorn
 python-dotenv
 mando
+requests
+markdownify
+markitdown[pdf]
+# pdfplumber

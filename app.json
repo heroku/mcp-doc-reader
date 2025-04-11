@@ -1,6 +1,6 @@
 {
-    "name": "Heroku MCP Server - Python Code Execution",
-    "description": "Model Context Protocol server to run Python code.",
+    "name": "Heroku MCP Server - Document Reader",
+    "description": "Model Context Protocol server that (currently) reads documents (HTML, PDF) and returns Markdown.",
     "repository": "https://github.com/heroku-reference-apps/mcp-code-exec-python",
     "env": {
         "API_KEY": {
@@ -10,6 +10,7 @@
     },
     "addons": [],
     "buildpacks": [
+        { "url": "https://github.com/heroku/heroku-buildpack-apt" },
         { "url": "heroku/python" }
     ]
 }
