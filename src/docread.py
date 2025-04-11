@@ -11,32 +11,54 @@ def html_url_to_markdown(url: str) -> str:
     html = response.text
     return md(html)
 
-def pdf_url_to_markdown(url: str) -> str:
-    """Download a PDF, convert to HTML using pdf2htmlEX, then to Markdown."""
-    with tempfile.TemporaryDirectory() as tmpdir:
-        pdf_path = os.path.join(tmpdir, "input.pdf")
-        html_path = os.path.join(tmpdir, "output.html")
-
-        # Download the PDF
-        response = requests.get(url)
-        response.raise_for_status()
-        with open(pdf_path, "wb") as f:
-            f.write(response.content)
-
-        # Convert PDF → HTML
-        subprocess.run(
-            ["pdf2htmlEX", "--quiet", pdf_path, html_path],
-            check=True
-        )
-
-        # Read and convert HTML to Markdown
-        with open(html_path, "r", encoding="utf-8") as f:
-            html = f.read()
-            return md(html)
-
 
 from markitdown import MarkItDown
 def parse_pdf(url: str):
     md = MarkItDown()
     result = md.convert(url)
     return result.text_content
+
+import pdfplumber
+import tempfile
+import requests
+import os
+
+def pdf_plumb(url: str) -> str:
+    """Download a PDF from a URL, extract all text + tables, and return Markdown."""
+    output = []
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
+        response = requests.get(url)
+        response.raise_for_status()
+        tmp_pdf.write(response.content)
+        tmp_pdf_path = tmp_pdf.name
+
+    try:
+        with pdfplumber.open(tmp_pdf_path) as pdf:
+            for page_num, page in enumerate(pdf.pages, start=1):
+                output.append(f"# 📄 Page {page_num}\n")
+
+                # Extract text with formatting
+                text = page.extract_text(x_tolerance=1.5, y_tolerance=1.5)
+                if text:
+                    clean_text = text.strip().replace('\n', '  \n')  # soft line breaks
+                    output.append(clean_text)
+
+                # Extract tables as Markdown
+                tables = page.extract_tables()
+                for table_num, table in enumerate(tables, start=1):
+                    output.append(f"\n### Table {table_num}\n")
+                    if table:
+                        header = [str(cell or "") for cell in table[0]]
+                        output.append("| " + " | ".join(header) + " |")
+                        output.append("| " + " | ".join("---" for _ in header) + " |")
+                        for row in table[1:]:
+                            row_text = " | ".join(str(cell or "") for cell in row)
+                            output.append(f"| {row_text} |")
+
+                output.append("")  # space between pages
+
+    finally:
+        os.unlink(tmp_pdf_path)
+
+    return "\n".join(output)

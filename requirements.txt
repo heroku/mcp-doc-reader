@@ -6,4 +6,4 @@ mando
 requests
 markdownify
 markitdown[pdf]
-# pdfplumber
+pdfplumber
