@@ -37,13 +37,18 @@ def mcp(method_name, args=None):
         This will only work locally:
 
             python example_clients/test_stdio.py mcp list_tools
-            python example_clients/test_stdio.py mcp call_tool --args '{"name": "code_exec_python", "arguments": {"code": "print(list(range(10)))"}}'
+            python example_clients/test_stdio.py mcp call_tool --args '{
+                "name": "pdf_to_markdown",
+                "arguments": {
+                    "url": "https://arxiv.org/pdf/1706.03762"
+                }
+            }'
 
         To run against your deployed code:
 
             heroku run --app $APP_NAME -- bash -c 'python -m example_clients.test_stdio mcp list_tools'
-            
-            json='{"name": "code_exec_python", "arguments": {"code": "print(list(range(10)))"}}'
+
+            json='{"name": "html_to_markdown", "arguments": {"url": "https://example.com"}}'
             heroku run --app "$APP_NAME" -- bash -c "python -m example_clients.test_stdio mcp call_tool --args '$json'"
 
         Or simulate a raw STDIO client:
@@ -54,7 +59,7 @@ def mcp(method_name, args=None):
 
 {"jsonrpc":"2.0","method":"notifications/initialized","params":{}}
 
-{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"code_exec_python","arguments":{"code":"import numpy as np; print(np.random.rand(50).tolist())","packages":["numpy"]}}}
+{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"pdf_to_markdown","arguments":{"url":"https://arxiv.org/pdf/1706.03762"}}}
 EOF
 
         Soon, you'll also be able to connect up your MPC repo to Heroku's MCP Gateway, which will make streaming from one-off dynos simple!

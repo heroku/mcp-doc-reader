@@ -192,7 +192,9 @@ heroku run --app "$APP_NAME" -- bash -c "python -m src.stdio_server 2> logs.txt"
 
 {"jsonrpc":"2.0","method":"notifications/initialized","params":{}}
 
-{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"code_exec_python","arguments":{"code":"import numpy as np; print(np.random.rand(50).tolist())","packages":["numpy"]}}}
+{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"html_to_markdown","arguments":{"url":"https://example.com"}}}
+
+{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"pdf_to_markdown","arguments":{"url":"https://arxiv.org/pdf/1706.03762"}}}
 EOF
 ```
 

@@ -1,6 +1,8 @@
 import requests
 import tempfile
-import subprocess
+import pdfplumber
+import tempfile
+import requests
 import os
 from markdownify import markdownify as md
 
@@ -12,18 +14,7 @@ def html_to_markdown(url: str) -> str:
     return md(html)
 
 
-from markitdown import MarkItDown
-def pdf_to_markdown(url: str):
-    md = MarkItDown()
-    result = md.convert(url)
-    return result.text_content
-
-import pdfplumber
-import tempfile
-import requests
-import os
-
-def pdf_to_markdown2(url: str) -> str:
+def pdf_to_markdown(url: str) -> str:
     """Download a PDF from a URL, extract all text + tables, and return Markdown."""
     output = []
 
