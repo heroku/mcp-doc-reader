@@ -1,7 +1,7 @@
 
-# Heroku MCP Code Execution - Python
+# Heroku MCP Doc Reader (HTML/PDF --> Markdown)
 
-- [Heroku MCP Code Execution - Python](#heroku-mcp-code-execution---python)
+- [Heroku MCP Doc Reader (HTML/PDF --\> Markdown)](#heroku-mcp-doc-reader-htmlpdf----markdown)
   - [Automatic Deployment](#automatic-deployment)
   - [Manual Deployment](#manual-deployment)
     - [**Set Required Environment Variables from Heroku CLI**](#set-required-environment-variables-from-heroku-cli)
