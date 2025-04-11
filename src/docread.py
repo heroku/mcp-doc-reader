@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 import tempfile
 import pdfplumber
@@ -10,6 +11,29 @@ def html_to_markdown(url: str) -> str:
     response.raise_for_status()
     html = response.text
     return md(html)
+
+
+
+def _linkify(text: str) -> str:
+    """Convert URLs to Markdown-style links."""
+    return re.sub(r"(https?://\S+)", r"[\1](\1)", text)
+
+
+def _sanitize_cell(cell: str) -> str:
+    """Escape pipe characters so Markdown tables render properly."""
+    return (cell or "").replace("|", "\\|")
+
+
+def _is_likely_heading(text: str) -> bool:
+    """Heuristic for whether a line is a heading."""
+    return text.isupper() and len(text.split()) < 10
+
+
+def _try_bold_heading(line: str) -> str:
+    """Bold likely headings based on formatting heuristics."""
+    if _is_likely_heading(line):
+        return f"**{line}**"
+    return line
 
 
 def pdf_to_markdown(url: str) -> str:
@@ -25,27 +49,29 @@ def pdf_to_markdown(url: str) -> str:
     try:
         with pdfplumber.open(tmp_pdf_path) as pdf:
             for page_num, page in enumerate(pdf.pages, start=1):
-                output.append(f"# 📄 Page {page_num}\n")
+                output.append(f"# Page {page_num}\n")
 
                 # Extract text with formatting
                 text = page.extract_text(x_tolerance=1.5, y_tolerance=1.5)
                 if text:
-                    clean_text = text.strip().replace('\n', '  \n')  # soft line breaks
-                    output.append(clean_text)
+                    lines = text.strip().splitlines()
+                    for line in lines:
+                        formatted = _try_bold_heading(_linkify(line.strip()))
+                        output.append(formatted + "  ")  # soft line break
 
                 # Extract tables as Markdown
                 tables = page.extract_tables()
                 for table_num, table in enumerate(tables, start=1):
                     output.append(f"\n### Table {table_num}\n")
                     if table:
-                        header = [str(cell or "") for cell in table[0]]
+                        header = [_sanitize_cell(cell) for cell in table[0]]
                         output.append("| " + " | ".join(header) + " |")
                         output.append("| " + " | ".join("---" for _ in header) + " |")
                         for row in table[1:]:
-                            row_text = " | ".join(str(cell or "") for cell in row)
+                            row_text = " | ".join(_sanitize_cell(cell) for cell in row)
                             output.append(f"| {row_text} |")
 
-                output.append("")  # space between pages
+                output.append("")  # blank line between pages
 
     finally:
         os.unlink(tmp_pdf_path)
