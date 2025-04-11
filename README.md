@@ -31,7 +31,6 @@ export APP_NAME=<your-heroku-app-name>
 heroku create $APP_NAME
 
 heroku buildpacks:set heroku/python -a $APP_NAME
-heroku buildpacks:set https://github.com/heroku/heroku-buildpack-apt -a $APP_NAME
 heroku config:set WEB_CONCURRENCY=1 -a $APP_NAME
 # set a private API key that you create, for example:
 heroku config:set API_KEY=$(openssl rand -hex 32) -a $APP_NAME
