@@ -4,7 +4,7 @@ import subprocess
 import os
 from markdownify import markdownify as md
 
-def html_url_to_markdown(url: str) -> str:
+def html_to_markdown(url: str) -> str:
     """Fetch a webpage and convert it to Markdown."""
     response = requests.get(url)
     response.raise_for_status()
@@ -13,7 +13,7 @@ def html_url_to_markdown(url: str) -> str:
 
 
 from markitdown import MarkItDown
-def parse_pdf(url: str):
+def pdf_to_markdown(url: str):
     md = MarkItDown()
     result = md.convert(url)
     return result.text_content
@@ -23,7 +23,7 @@ import tempfile
 import requests
 import os
 
-def pdf_plumb(url: str) -> str:
+def pdf_to_markdown2(url: str) -> str:
     """Download a PDF from a URL, extract all text + tables, and return Markdown."""
     output = []
 

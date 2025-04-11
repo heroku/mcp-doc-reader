@@ -86,14 +86,23 @@ List tools:
 python example_clients/test_sse.py mcp list_tools | jq
 ```
 
-Example tool call request:
+Example tool call request - HTML:
 *NOTE: this will intentionally NOT work if you have set `STDIO_MODE_ONLY` to `true`.*
 ```bash
 python example_clients/test_sse.py mcp call_tool --args '{
-  "name": "code_exec_python",
+  "name": "html_to_markdown",
   "arguments": {
-    "code": "import numpy as np; print(np.random.rand(50).tolist())",
-    "packages": ["numpy"]
+    "url": "https://example.com"
+  }
+}' | jq
+```
+
+Example tool call request - PDF:
+```bash
+python example_clients/test_sse.py mcp call_tool --args '{
+  "name": "pdf_to_markdown",
+  "arguments": {
+    "url": "https://arxiv.org/pdf/1706.03762"
   }
 }' | jq
 ```
@@ -107,13 +116,23 @@ List tools:
 python example_clients/test_stdio.py mcp list_tools | jq
 ```
 
-Example tool call request:
+Example tool call request - HTML:
+*NOTE: this will intentionally NOT work if you have set `STDIO_MODE_ONLY` to `true`.*
 ```bash
 python example_clients/test_stdio.py mcp call_tool --args '{
-  "name": "code_exec_python",
+  "name": "html_to_markdown",
   "arguments": {
-    "code": "import numpy as np; print(np.random.rand(50).tolist())",
-    "packages": ["numpy"]
+    "url": "https://example.com"
+  }
+}' | jq
+```
+
+Example tool call request - PDF:
+```bash
+python example_clients/test_stdio.py mcp call_tool --args '{
+  "name": "pdf_to_markdown",
+  "arguments": {
+    "url": "https://arxiv.org/pdf/1706.03762"
   }
 }' | jq
 ```
@@ -127,7 +146,9 @@ cat <<EOF | python -m src.stdio_server
 
 {"jsonrpc":"2.0","method":"notifications/initialized","params":{}}
 
-{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"code_exec_python","arguments":{"code":"import numpy as np; print(np.random.rand(50).tolist())","packages":["numpy"]}}}
+{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"html_to_markdown","arguments":{"url":"https://example.com"}}}
+
+{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"pdf_to_markdown","arguments":{"url":"https://arxiv.org/pdf/1706.03762"}}}
 EOF
 ```
 *(Note that the server expects the client to send a shutdown request, so you can stop the connection with CTRL-C)*
@@ -153,10 +174,9 @@ or:
 ```bash
 heroku run --app $APP_NAME -- bash -c '
 python -m example_clients.test_stdio mcp call_tool --args '\''{
-  "name": "code_exec_python",
+  "name": "html_to_markdown",
   "arguments": {
-    "code": "import numpy as np; print(np.random.rand(50).tolist())",
-    "packages": ["numpy"]
+    "url": "https://example.com"
   }
 }'\'' | jq
 '

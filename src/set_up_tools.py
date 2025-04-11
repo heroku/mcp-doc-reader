@@ -10,7 +10,7 @@ import logging
 from mcp.server.fastmcp import FastMCP
 
 # Local:
-from src.docread import html_url_to_markdown, parse_pdf, pdf_plumb
+from src import docread
 from src import config
 
 # Configure logging to go to stderr
@@ -21,9 +21,9 @@ def set_up_tools_server():
     # Register tools globally
     tools = {}
     if (not config.STDIO_MODE_ONLY) or config.is_one_off_dyno:
-        tools["parse_pdf"] = parse_pdf
-        tools["html_url_to_markdown"] = html_url_to_markdown
-        tools["pdf_plumb"] = pdf_plumb
+        tools["html_to_markdown"] = docread.html_to_markdown
+        tools["pdf_to_markdown"] = docread.pdf_to_markdown
+        tools["pdf_to_markdown2"] = docread.pdf_to_markdown
 
     mcp_server = FastMCP("tools")
     for name, tool in tools.items():
