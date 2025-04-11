@@ -1,9 +1,7 @@
+import os
 import requests
 import tempfile
 import pdfplumber
-import tempfile
-import requests
-import os
 from markdownify import markdownify as md
 
 def html_to_markdown(url: str) -> str:
