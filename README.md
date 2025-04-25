@@ -1,5 +1,5 @@
 
-# Heroku MCP Doc Reader (HTML/PDF --> Markdown)
+# Heroku Doc Reader (HTML/PDF --> Markdown) For MCP
 
 - [Heroku MCP Doc Reader (HTML/PDF --\> Markdown)](#heroku-mcp-doc-reader-htmlpdf----markdown)
   - [Automatic Deployment](#automatic-deployment)
