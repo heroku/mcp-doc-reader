@@ -20,7 +20,7 @@
 
 ## Automatic Deployment
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://www.heroku.com/deploy?template=https://github.com/heroku/mcp-doc-reader)
 
 ## Manual Deployment
 ### **Set Required Environment Variables from Heroku CLI**
