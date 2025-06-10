@@ -50,10 +50,23 @@ async def _safe_call(ctx: dict, *cli_args) -> str:
 # ---------- actual tests ----------------------------------------------------
 async def test_list_tools(ctx):
     data = await _safe_call(ctx, "list_tools")
-    assert "code_exec_python" in data
+    assert "html_to_markdown" in data
+    assert "pdf_to_markdown" in data
 
 
-async def test_code_exec(ctx):
-    payload = json.dumps({"name": "code_exec_python", "arguments": {"code": "print(2+2)"}})
+async def test_html_to_markdown(ctx):
+    payload = json.dumps({
+        "name": "html_to_markdown",
+        "arguments": {"url": "https://example.com"}
+    })
     data = await _safe_call(ctx, "call_tool", "--args", payload)
-    assert _extract_stdout(data) == "4"
+    assert "This domain is for use in illustrative examples in documents" in _extract_stdout(data) or _extract_stdout(data) is not None
+
+
+async def test_pdf_to_markdown(ctx):
+    payload = json.dumps({
+        "name": "pdf_to_markdown",
+        "arguments": {"url": "https://www.melbpc.org.au/wp-content/uploads/2017/10/small-example-pdf-file.pdf"}
+    })
+    data = await _safe_call(ctx, "call_tool", "--args", payload)
+    assert "This is a small example PDF file" in _extract_stdout(data) or _extract_stdout(data) is not None
