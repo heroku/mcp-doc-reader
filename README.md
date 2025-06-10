@@ -97,13 +97,13 @@ In the following commands, use either `example_clients/streamable_http_client.py
 
 List tools:
 ```bash
-python example_clients/test_sse.py mcp list_tools | jq
+python example_clients/streamable_http_client.py mcp list_tools | jq
 ```
 
 Example tool call request - HTML:
 *NOTE: this will intentionally NOT work if you have set `STDIO_MODE_ONLY` to `true`.*
 ```bash
-python example_clients/test_sse.py mcp call_tool --args '{
+python example_clients/streamable_http_client.py mcp call_tool --args '{
   "name": "html_to_markdown",
   "arguments": {
     "url": "https://example.com"
@@ -113,7 +113,7 @@ python example_clients/test_sse.py mcp call_tool --args '{
 
 Example tool call request - PDF:
 ```bash
-python example_clients/test_sse.py mcp call_tool --args '{
+python example_clients/streamable_http_client.py mcp call_tool --args '{
   "name": "pdf_to_markdown",
   "arguments": {
     "url": "https://arxiv.org/pdf/1706.03762"
