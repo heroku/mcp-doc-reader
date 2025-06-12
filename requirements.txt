@@ -3,7 +3,7 @@ fastapi==0.115.12
 uvicorn==0.34.3
 python-dotenv==1.1.0
 mando==0.8.2
-requests==2.32.3
+requests==2.32.4
 markdownify==1.1.0
 pdfplumber==0.11.6
 # --- dev / CI only -------------------------------------------------
