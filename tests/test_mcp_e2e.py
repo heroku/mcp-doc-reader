@@ -60,7 +60,7 @@ async def test_html_to_markdown(ctx):
         "arguments": {"url": "https://example.com"}
     })
     data = await _safe_call(ctx, "call_tool", "--args", payload)
-    assert "This domain is for use in illustrative examples in documents" in _extract_stdout(data) or _extract_stdout(data) is not None
+    assert "This domain is for use in illustrative examples in documents" in data
 
 
 async def test_pdf_to_markdown(ctx):
@@ -69,4 +69,4 @@ async def test_pdf_to_markdown(ctx):
         "arguments": {"url": "https://www.melbpc.org.au/wp-content/uploads/2017/10/small-example-pdf-file.pdf"}
     })
     data = await _safe_call(ctx, "call_tool", "--args", payload)
-    assert "This is a small example PDF file" in _extract_stdout(data) or _extract_stdout(data) is not None
+    assert "This is a small example PDF file" in data
