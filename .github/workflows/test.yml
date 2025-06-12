@@ -46,17 +46,38 @@ jobs:
     env:
       HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       API_KEY: ci-test-key
-      # setting an $APP_NAME that will be unique even if folks choose to fork this repo --> avoids clashes.
-      APP_NAME: mcp-${{ github.repository_owner }}-${{ github.event.repository.name }}-pr-${{ github.event.number }}
       # also note that github CI doesn't have access to your app's config vars, so here we're setting the remote
       # server type to streamable HTTP. Folks using SSE would need to change this line for their e2e remote integration
       # tests to test SSE instead of streamable HTTP.
       REMOTE_SERVER_TRANSPORT_MODULE: streamable_http_server
+      # $APP_NAME is set below because we need to shorten the repo owner's name, as a precaution
 
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # <-- disables shallow clone, which heroku is upset by?
+          fetch-depth: 0  # <-- disables shallow clone, which heroku is upset by when running git push heroku later on
+
+      # Setting a short $APP_NAME that will be unique even if folks choose to fork this repo --> avoids clashes.
+      # Needs to be shortened if the github repo owner has a long name (max 30 char app name heroku limit).
+      - name: Generate short APP_NAME
+        id: appname
+        run: |
+          OWNER_SHORT=${GITHUB_REPOSITORY_OWNER:0:5}
+          REPO_NAME=$(basename "$GITHUB_REPOSITORY")
+          PR_NUMBER=$(jq .number "$GITHUB_EVENT_PATH")
+          APP_NAME="${OWNER_SHORT}-${REPO_NAME}-${PR_NUMBER}"
+          echo "APP_NAME=$APP_NAME"
+          echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+
+      - name: Read Python version from .python-version
+        id: python-version
+        run: |
+          PY_VERSION=$(cat .python-version)
+          echo "version=$PY_VERSION" >> $GITHUB_OUTPUT
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ steps.python-version.outputs.version }}
 
       - name: Install Heroku CLI
         run: |
@@ -85,16 +106,6 @@ jobs:
       - name: Deploy this branch to Heroku
         run: |
           git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$APP_NAME.git HEAD:refs/heads/main --force
-
-      - name: Read Python version from .python-version
-        id: python-version
-        run: |
-          PY_VERSION=$(cat .python-version)
-          echo "version=$PY_VERSION" >> $GITHUB_OUTPUT
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ steps.python-version.outputs.version }}
 
       - uses: actions/cache@v4
         with:
