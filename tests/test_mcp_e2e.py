@@ -60,7 +60,7 @@ async def test_html_to_markdown(ctx):
         "arguments": {"url": "https://example.com"}
     })
     data = await _safe_call(ctx, "call_tool", "--args", payload)
-    assert "This domain is for use in illustrative examples in documents" in data
+    assert "This domain is for use in documentation examples without needing permission" in data
 
 
 async def test_pdf_to_markdown(ctx):
