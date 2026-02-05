@@ -66,7 +66,7 @@ async def test_html_to_markdown(ctx):
 async def test_pdf_to_markdown(ctx):
     payload = json.dumps({
         "name": "pdf_to_markdown",
-        "arguments": {"url": "https://www.melbpc.org.au/wp-content/uploads/2017/10/small-example-pdf-file.pdf"}
+        "arguments": {"url": "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"}
     })
     data = await _safe_call(ctx, "call_tool", "--args", payload)
-    assert "This is a small example PDF file" in data
+    assert "Dummy PDF file" in data
