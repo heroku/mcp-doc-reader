@@ -1,8 +1,12 @@
-.PHONY: install test clean all
+.PHONY: help install test clean
 
 VENV := .venv
 
-all: install
+help:
+	@echo "Available targets:"
+	@echo "  make install  - Create venv and install dependencies"
+	@echo "  make test     - Run tests"
+	@echo "  make clean    - Remove venv"
 
 $(VENV)/pyvenv.cfg:
 	python3 -m venv $(VENV)
