@@ -9,7 +9,7 @@ from mcp.client.stdio import stdio_client
 
 # Set up how to start your server
 server_params = StdioServerParameters(
-    command="python",
+    command=sys.executable,
     args=["-m", "src.stdio_server"],
     # NOTE: you may want to change this depending on what ENV variables you want your LLM to have access to!
     env=os.environ.copy(),
