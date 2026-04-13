@@ -5,9 +5,11 @@ import tempfile
 import pdfplumber
 from markdownify import markdownify as md
 
+_HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; mcp-doc-reader/1.0)"}
+
 def html_to_markdown(url: str) -> str:
     """Fetch a webpage and convert it to Markdown."""
-    response = requests.get(url)
+    response = requests.get(url, headers=_HEADERS, timeout=30)
     response.raise_for_status()
     html = response.text
     return md(html)
@@ -41,7 +43,7 @@ def pdf_to_markdown(url: str) -> str:
     output = []
 
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_pdf:
-        response = requests.get(url)
+        response = requests.get(url, headers=_HEADERS, timeout=30)
         response.raise_for_status()
         tmp_pdf.write(response.content)
         tmp_pdf_path = tmp_pdf.name

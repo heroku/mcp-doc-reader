@@ -57,10 +57,10 @@ async def test_list_tools(ctx):
 async def test_html_to_markdown(ctx):
     payload = json.dumps({
         "name": "html_to_markdown",
-        "arguments": {"url": "https://example.com"}
+        "arguments": {"url": "https://www.w3.org/"}
     })
     data = await _safe_call(ctx, "call_tool", "--args", payload)
-    assert "This domain is for use in documentation examples without needing permission" in data
+    assert "World Wide Web Consortium" in data
 
 
 async def test_pdf_to_markdown(ctx):
