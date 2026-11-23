@@ -8,4 +8,4 @@ markdownify==1.2.3
 pdfplumber==0.11.9
 # --- dev / CI only -------------------------------------------------
 pytest>=9.2.0
-pytest-asyncio>=1.4.0
+pytest-asyncio>=1.5.0
